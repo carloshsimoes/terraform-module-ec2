@@ -48,8 +48,7 @@ terraform {
 */
 
 module "servers" {
-  #source                  = "git@github.com:carloshsimoes/terraform-module-ec2?ref=1.0"
-
+  source                  = "git@github.com:carloshsimoes/terraform-module-ec2?ref=1.0"
   servers       = 1
   so            = "ubuntu"
   instance_type = "t2.micro"
