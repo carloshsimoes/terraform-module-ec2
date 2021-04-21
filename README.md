@@ -5,7 +5,7 @@ Exemplo de código criado para criação de instâncias EC2 no Provider AWS!
 **OBS:** Não esquecer de passar os parâmetros "AWS_ACCESS_KEY_ID" e "AWS_SECRET_ACCESS_KEY" de uma conta que possui permissões para performar/criar recursos no seu provider AWS, assim como consumir o S3 caso esteja utilizando state remoto!
 
 
-- Criar em sua conta AWS também, um Security Group (SG) default, com os atributos abaixo:
+Criar em sua conta AWS também, um Security Group (SG) default, com os atributos abaixo:
 
 * Security Group Name: sgdefault
 * TAG: key="modelo" / value="sgdefault"
