@@ -15,7 +15,7 @@ Criar em sua conta AWS também, um Security Group (SG) default, com os atributos
 ## Para consumir o modulo, você deverá passar os inputs:
 
 * **servers (number)** -> Quantidade de instâncias a criar (ex: 1)
-* **so (string)** -> Distribuição SO, ("ubuntu" ou "amazonlinux"), no qual o modulo vai buscar a AMI correspondendo oficial correspondente na sua última versão!
+* **so (string)** -> Distribuição SO, ("ubuntu" ou "amazonlinux"), no qual o modulo vai buscar a AMI oficial correspondente na sua última versão!
 * **instance_type (string)** -> Tipo de instância a ser criada, exemplo "t2.micro".
 * **name (string)** -> Nome da sua ou suas instâncias, exemplo: "srv-web-dev"
 * **environment (string)** -> Qual o ambiente? Será criada uma TAG também com esse atributo, identificando o environment, exemplo: "Desenvolvimento"
