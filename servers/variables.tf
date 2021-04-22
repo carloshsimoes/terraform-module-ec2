@@ -42,7 +42,7 @@ variable "blocks" {
     volume_size = string
     volume_type = string
   }))
-  description = "List for EBS Blocks"
+  description = "Lista com objetos Blocks para criação de volumes EBS"
 }
 
 variable "enable_sg" {
@@ -57,5 +57,5 @@ variable "ingress" {
     cidr_value = string
     protocol_value = string
   }))
-  description = "List for create ingress rule in to Security Group "
+  description = "Lista com objetos, rules, para criação das regras de inbound do resource SG"
 }
