@@ -24,6 +24,7 @@ resource "aws_instance" "web" {
   count         = var.servers
   ami           = var.so == "ubuntu" ? data.aws_ami.ubuntu.id : data.aws_ami.amazonlinux.id
   instance_type = var.instance_type
+  #key_name      = var.key_name
   vpc_security_group_ids = var.enable_sg ? aws_security_group.optional[*].id : [data.aws_security_group.default.id]
 
   dynamic "ebs_block_device" {

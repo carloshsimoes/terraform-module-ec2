@@ -36,6 +36,11 @@ variable "environment" {
   description = "Environment para definir TAG"
 }
 
+variable "key_name" {
+  type        = string
+  description = "Nome da chave para conectar as EC2"
+}
+
 variable "blocks" {
   type = list(object({
     device_name = string

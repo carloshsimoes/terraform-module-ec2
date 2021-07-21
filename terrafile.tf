@@ -11,6 +11,7 @@ terraform {
     bucket = "nome-meu-bucket-terraformstate"
     key    = "terraform-lab.tfstate"
     region = "us-east-1" #virginia
+    encrypt = true
   }
 }
 */
@@ -23,6 +24,8 @@ module "servers" {
   instance_type = "t2.micro"
   name          = "srv-web"
   environment   = "Desenvolvimento"
+  # Private Key utilizada caso já houver
+  #key_name      = "private-key-ec2"
 
   blocks = [
     {
@@ -55,6 +58,11 @@ module "servers" {
       cidr_value     = "0.0.0.0/0"
       protocol_value = "tcp"
     },
+    /*{
+      port_value     = 0
+      cidr_value     = "172.16.0.0/16"
+      protocol_value = -1
+    },*/
   ]
 }
 

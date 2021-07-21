@@ -54,6 +54,8 @@ module "servers" {
   instance_type = "t2.micro"
   name          = "srv-web-dev"
   environment   = "Desenvolvimento"
+  # Private Key utilizada caso já houver
+  #key_name      = "private-key-ec2"
 
   blocks = [
     {
