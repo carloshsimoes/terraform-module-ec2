@@ -57,5 +57,5 @@ resource "aws_eip" "lb" {
   count = var.enable_eip ? 1 : 0
   instance = aws_instance.web.id
   vpc      = true
-  depends_on = [aws_instance.web[*]]
+  depends_on = [aws_instance.web[var.count]]
 }
