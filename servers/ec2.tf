@@ -53,7 +53,7 @@ resource "aws_instance" "web" {
 
 }
 
-resource "aws_eip" "lb" {
+resource "aws_eip" "servers" {
   count = var.enable_eip ? var.servers : 0
   instance = aws_instance.web[count.index].id
   vpc      = true
