@@ -35,8 +35,14 @@ resource "aws_instance" "web" {
   #associate_public_ip_address = true
   associate_public_ip_address = var.enable_eip
 
+  root_block_device {
+    volume_size = var.blocks_ebs_root_volume[0]
+    volume_type = var.blocks_ebs_root_volume[1]
+    encrypted   = true
+  }
+
   dynamic "ebs_block_device" {
-    for_each = var.blocks
+    for_each = var.blocks_ebs_volumes
     content {
       device_name = ebs_block_device.value["device_name"]
       volume_size = ebs_block_device.value["volume_size"]

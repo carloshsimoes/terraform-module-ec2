@@ -54,15 +54,19 @@ variable "key_name" {
   default = ""
 }
 
+variable "blocks_ebs_root_volume" {
+  type = list(string)
+  default = ["8","gp3"]
+  description = "Lista com valores para criação do volume root"
+}
 
-
-variable "blocks" {
+variable "blocks_ebs_volumes" {
   type = list(object({
     device_name = string
     volume_size = string
     volume_type = string
   }))
-  description = "Lista com objetos Blocks para criação de volumes EBS"
+  description = "Lista com objetos Blocks para criação de volumes EBS adicionais"
 }
 
 variable "enable_sg" {
