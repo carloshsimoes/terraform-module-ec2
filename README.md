@@ -55,10 +55,7 @@ terraform {
 */
 
 module "servers" {
-  source         = "git::ssh://git@github.com:carloshsimoes/terraform-module-ec2//servers"
-  
-  # Caso baixe o repo localmente, pode especificar o source o path do mesmo, exemplo:
-  #source        = "./servers"
+  source         = "git::https://github.com/carloshsimoes/terraform-module-ec2//servers"
 
   # Quantidade de instâncias a criar
   servers       = 1
