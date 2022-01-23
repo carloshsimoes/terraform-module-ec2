@@ -24,8 +24,16 @@ resource "aws_instance" "web" {
   count         = var.servers
   ami           = var.so == "ubuntu" ? data.aws_ami.ubuntu.id : data.aws_ami.amazonlinux.id
   instance_type = var.instance_type
-  #key_name      = var.key_name
+  iam_instance_profile = var.iam_instance_profile
+
+  key_name      = var.key_name
+  # public_key    = var.create_keypair ? tls_private_key.this.public_key_openssh : ""
+
   vpc_security_group_ids = var.enable_sg ? aws_security_group.optional[*].id : [data.aws_security_group.default.id]
+  subnet_id     = var.subnet_id
+
+  #associate_public_ip_address = true
+  associate_public_ip_address = var.enable_eip
 
   dynamic "ebs_block_device" {
     for_each = var.blocks
@@ -36,9 +44,11 @@ resource "aws_instance" "web" {
     }
   }
 
+
   tags = {
 
     Name = var.name
     Env  = var.environment
   }
+
 }

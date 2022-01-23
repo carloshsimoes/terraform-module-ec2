@@ -19,8 +19,14 @@ Criar em sua conta AWS também, um Security Group (SG) default, com os atributos
 * **instance_type (string)** -> Tipo de instância a ser criada, exemplo "t2.micro".
 * **name (string)** -> Nome da sua ou suas instâncias, exemplo: "srv-web-dev"
 * **environment (string)** -> Qual o ambiente? Será criada uma TAG também com esse atributo, identificando o environment, exemplo: "Desenvolvimento"
+* **create_keypair (bool)** -> Deseja criar a KeyPair (PrivateKey) para acesso a instância EC2 automaticamente? True | False
+* **key_name (string)** -> Private Key utilizada para conectar a instância EC2
+* **iam_instance_profile (string)** -> Role IAM associada a Instancia (Obs; Deve existir/ser criada previamente com repo de IAM)
+* **vpc_id (string)** -> Qual a VPC os recursos serão criados? exemplo "vpc-03b0a419b5b2e9e2e".
+* **subnet_id (string)** -> Qual a Subnet os recursos serão criados? exemplo subnet-02c7ceb2a5feafd40".
 * **blocks (list object)** -> Definições de volume(s) EBS a serem criados. * Veja exemplo no "terrafile.tf" abaixo!
 * **enable_sg (bool)** -> Deseja criar um Security Group (SG) customizado? True | False
+* **enable_eip (bool)** -> Deseja criar e associar um Elastic IP (IP)? True | False
 * **ingress (list object))** - > Definições do SG a ser criado, caso tenha habilitado a flag "enable_sg"
 
 
@@ -43,35 +49,72 @@ terraform {
     bucket = "nome-meu-bucket-terraformstate"
     key    = "terraform-lab.tfstate"
     region = "us-east-1" #virginia
+    encrypt = true
   }
 }
 */
 
 module "servers" {
-  source        = "./servers"
-  servers       = 1
-  so            = "ubuntu"
-  instance_type = "t2.micro"
-  name          = "srv-web-dev"
-  environment   = "Desenvolvimento"
-  # Private Key utilizada caso já houver
-  #key_name      = "private-key-ec2"
+  source         = "git::ssh://git@github.com:carloshsimoes/terraform-module-ec2//servers"
+  
+  # Caso baixe o repo localmente, pode especificar o source o path do mesmo, exemplo:
+  #source        = "./servers"
 
+  # Quantidade de instâncias a criar
+  servers       = 1
+
+  # Qual o distribuicao, ubuntu ou amazonlinux
+  so            = "ubuntu"
+  #so            = "amazonlinux"
+
+  # Qual a familia/tipo da instância
+  instance_type = "t2.micro"
+
+   # Nome da instância
+  name          = "srv-web"
+
+  # Ambiente
+  environment   = "Desenvolvimento"
+  
+  # Criar uma nova KeyPair utilizada para conectar a ec2
+  create_keypair = true
+  key_name      = "KP-EC2-NAME"
+
+  # Role IAM associada a Instancia (Obs; Deve existir/ser criada previamente com repo de IAM)
+  iam_instance_profile = "IAM_EC2_ROLE"
+
+  # VPC onde o SG será criado
+  vpc_id = "vpc-XXXXXXXXXXXXXX"
+
+  # Subnet aonde a instancia sera criada
+  # Privada
+  #subnet_id = "subnet-XXXXXXXXXXXXXX"
+  # Publica
+  subnet_id = "subnet-XXXXXXXXXXXXXX"
+
+  # Habilitar/Associar a Elastic IP - EIP?
+  enable_eip = true
+  #enable_eip = false
+
+ # Volumes EBS especificações
   blocks = [
     {
-      device_name = "/dev/sdg"
-      volume_size = 8
-      volume_type = "gp2"
+      device_name = "/dev/sda1"
+      volume_size = 10
+      volume_type = "gp3"
     },
-    {
-      device_name = "/dev/sdh"
-      volume_size = 2
-      volume_type = "gp2"
-    },
+    #{
+    #  device_name = "/dev/sdh"
+    #  volume_size = 8
+    #  volume_type = "gp2"
+    #},
   ]
 
+  # Habilitar/criar SG customizado?
   enable_sg = true
+  #enable_sg = false
 
+  # especificações do SG customizado, somente será criado se definido enable_sg = true
   ingress = [
     {
       port_value     = 80
@@ -88,11 +131,16 @@ module "servers" {
       cidr_value     = "0.0.0.0/0"
       protocol_value = "tcp"
     },
+    /*{
+      port_value     = 0
+      cidr_value     = "10.16.0.0/16"
+      protocol_value = -1
+    },*/
   ]
 }
 
-output "ip_address" {
-  value = module.servers.ip_address
-}
+# output "ip_address" {
+#   value = module.servers.ip_address
+# }
 ```
 

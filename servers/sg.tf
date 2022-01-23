@@ -13,6 +13,7 @@ data "aws_security_group" "default" {
 resource "aws_security_group" "optional" {
   count = var.enable_sg ? 1 : 0
   name        = "allow-traffic-${var.name}"
+  vpc_id      = var.vpc_id
 
   dynamic "ingress" {
     for_each = var.ingress

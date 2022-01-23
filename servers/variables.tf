@@ -10,6 +10,12 @@ variable "so" {
   description = "Tipo de SO Linux, ubuntu ou amazonlinux"
 }
 
+variable "iam_instance_profile" {
+  type = string
+  default = ""
+  description = "ARN da Role que a instancia vai assumir"
+}
+
 variable "instance_type" {
   type = string
   default = "t2.micro"
@@ -36,10 +42,19 @@ variable "environment" {
   description = "Environment para definir TAG"
 }
 
+variable "create_keypair" {
+  type    = bool
+  default = false
+  description = "Criar nova KeyPair para acesso a EC2"
+}
+
 variable "key_name" {
   type        = string
   description = "Nome da chave para conectar as EC2"
+  default = ""
 }
+
+
 
 variable "blocks" {
   type = list(object({
@@ -56,6 +71,12 @@ variable "enable_sg" {
   description = "Habilitar funcionalidade de criação do SG"
 }
 
+variable "enable_eip" {
+  type    = bool
+  default = false
+  description = "Associar a um Elastic IP - Ip público fixo?"
+}
+
 variable "ingress" {
   type = list(object({
     port_value = number
@@ -63,4 +84,31 @@ variable "ingress" {
     protocol_value = string
   }))
   description = "Lista com objetos, rules, para criação das regras de inbound do resource SG"
+}
+
+variable "vpc_id" {
+    type = string
+    default = ""
+    description = "Qual a VPC?"
+
+    validation {
+    condition     = length(var.vpc_id) > 3 && substr(var.vpc_id, 0, 4) == "vpc-"
+    error_message = "O valor vpc_id deve ter no minimo 4 caracteres, exemplo \"vpc-\"."
+  }
+}
+
+variable "subnet_id" {
+    type = string
+    default = ""
+    description = "Qual a Subnet no qual a instância será criada?"
+}
+
+variable "custom_tags" {
+  type    = map
+  default = {}
+}
+
+variable "base_tags" {
+  type    = map
+  default = {}
 }

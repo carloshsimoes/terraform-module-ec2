@@ -17,31 +17,66 @@ terraform {
 */
 
 module "servers" {
-  #source         = "git@github.com:carloshsimoes/terraform-module-ec2"
-  source        = "./servers"
-  servers       = 1
-  so            = "ubuntu"
-  instance_type = "t2.micro"
-  name          = "srv-web"
-  environment   = "Desenvolvimento"
-  # Private Key utilizada caso já houver
-  #key_name      = "private-key-ec2"
+  source         = "git::ssh://git@github.com:carloshsimoes/terraform-module-ec2//servers"
+  
+  # Caso baixe o repo localmente, pode especificar o source o path do mesmo, exemplo:
+  #source        = "./servers"
 
+  # Quantidade de instâncias a criar
+  servers       = 1
+
+  # Qual o distribuicao, ubuntu ou amazonlinux
+  so            = "ubuntu"
+  #so            = "amazonlinux"
+
+  # Qual a familia/tipo da instância
+  instance_type = "t2.micro"
+
+   # Nome da instância
+  name          = "srv-web"
+
+  # Ambiente
+  environment   = "Desenvolvimento"
+  
+  # Criar uma nova KeyPair utilizada para conectar a ec2
+  create_keypair = true
+  key_name      = "KP-EC2-NAME"
+
+  # Role IAM associada a Instancia (Obs; Deve existir/ser criada previamente com repo de IAM)
+  iam_instance_profile = "IAM_EC2_ROLE"
+
+  # VPC onde o SG será criado
+  vpc_id = "vpc-XXXXXXXXXXXXXX"
+
+  # Subnet aonde a instancia sera criada
+  # Privada
+  #subnet_id = "subnet-XXXXXXXXXXXXXX"
+  # Publica
+  subnet_id = "subnet-XXXXXXXXXXXXXX"
+
+  # Habilitar/Associar a Elastic IP - EIP?
+  enable_eip = true
+  #enable_eip = false
+
+ # Volumes EBS especificações
   blocks = [
     {
-      device_name = "/dev/sdg"
-      volume_size = 8
-      volume_type = "gp2"
+      device_name = "/dev/sda1"
+      volume_size = 10
+      volume_type = "gp3"
     },
-    {
-      device_name = "/dev/sdh"
-      volume_size = 2
-      volume_type = "gp2"
-    },
+    #{
+    #  device_name = "/dev/sdh"
+    #  volume_size = 8
+    #  volume_type = "gp2"
+    #},
   ]
 
+  # Habilitar/criar SG customizado?
   enable_sg = true
+  #enable_sg = false
 
+  # especificações do SG customizado, somente será criado se definido enable_sg = true
   ingress = [
     {
       port_value     = 80
@@ -60,12 +95,12 @@ module "servers" {
     },
     /*{
       port_value     = 0
-      cidr_value     = "172.16.0.0/16"
+      cidr_value     = "10.16.0.0/16"
       protocol_value = -1
     },*/
   ]
 }
 
-output "ip_address" {
-  value = module.servers.ip_address
-}
+# output "ip_address" {
+#   value = module.servers.ip_address
+# }
