@@ -1,34 +1,34 @@
 output "private_ip" {
   value = {
     for instance in aws_instance.web:
-    instance.private_ip => instance.private_ip
+    instance.name => instance.private_ip
   }
 }
 
 output "public_dns" {
   value = {
     for instance in aws_instance.web:
-    instance.public_dns => instance.public_dns
+    instance.name => instance.public_dns
   }
 }
 
 output "public_ip" {
   value = {
     for instance in aws_instance.web:
-    instance.public_ip => instance.public_ip
+    instance.name => instance.public_ip
   }
 }
 
 output "id" {
   value = {
     for instance in aws_instance.web:
-    instance.id => instance.id
+    instance.name => instance.id
   }
 }
 
 output "arn" {
   value = {
     for instance in aws_instance.web:
-    instance.arn => instance.arn
+    instance.name => instance.arn
   }
 }
