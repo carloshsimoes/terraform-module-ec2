@@ -1,7 +1,7 @@
 output "private_ip" {
   value = {
     for instance in aws_instance.web:
-    instance.private_ip => instance.private_ip
+    private_ip => instance.private_ip
   }
 }
 
