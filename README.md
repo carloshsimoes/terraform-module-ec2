@@ -37,75 +37,86 @@ Para usar o modulo, criar no módulo raiz (root module) o arquivo **terrafile.tf
 
 ```terraform
 provider "aws" {
-  region  = "us-east-1" #Virginia
+  #region  = "us-east-1" #Virginia
+  region  = "sa-east-1" #SaoPaulo
   version = "~> 3.0"
 }
 
 # Caso use/queira usar state remoto em um bucket S3
+
 /*
 terraform {
   backend "s3" {
     # Lembre de trocar o bucket para o seu Bucket S3 e também a região do Bucket!!
-    bucket = "nome-meu-bucket-terraformstate"
-    key    = "terraform-lab.tfstate"
-    region = "us-east-1" #virginia
+    bucket  = "nome-meubucket-tfstate"
+    key     = "terraform-ec2-instances.tfstate"
+    region  = "sa-east-1" #SaoPaulo
+    #region  = "us-east-1" #Virginia
     encrypt = true
   }
 }
 */
 
 module "servers" {
-  source         = "git::https://github.com/carloshsimoes/terraform-module-ec2//servers"
+  source = "git::https://github.com/carloshsimoes/terraform-module-ec2//servers"
 
   # Quantidade de instâncias a criar
-  servers       = 1
+  servers = 1
 
   # Qual o distribuicao, ubuntu ou amazonlinux
-  so            = "ubuntu"
+  so = "ubuntu"
   #so            = "amazonlinux"
 
   # Qual a familia/tipo da instância
   instance_type = "t2.micro"
 
-   # Nome da instância
-  name          = "srv-web"
+  # Nome da instância
+  name = "nome-da-minha-instancia"
 
   # Ambiente
-  environment   = "Desenvolvimento"
-  
+  environment = "Producao"
+
   # Criar uma nova KeyPair utilizada para conectar a ec2
   create_keypair = true
-  key_name      = "KP-EC2-NAME"
+  key_name       = "KP-EC2-NOME-CHAVE-PRIVADA"
 
   # Role IAM associada a Instancia (Obs; Deve existir/ser criada previamente com repo de IAM)
-  iam_instance_profile = "IAM_EC2_ROLE"
+  iam_instance_profile = "EC2-Role-Name"
 
   # VPC onde o SG será criado
-  vpc_id = "vpc-XXXXXXXXXXXXXX"
+  vpc_id = "vpc-xxxxxxxxxxxxxxxxx"
 
   # Subnet aonde a instancia sera criada
-  # Privada
-  #subnet_id = "subnet-XXXXXXXXXXXXXX"
-  # Publica
-  subnet_id = "subnet-XXXXXXXXXXXXXX"
+  subnet_id = "subnet-xxxxxxxxxxxxxxxxx"
 
   # Habilitar/Associar a Elastic IP - EIP?
   enable_eip = true
   #enable_eip = false
 
- # Volumes EBS especificações
-  blocks = [
+  # Volume EBS ROOT | Tamanho, tipo
+  root_block_device = [
     {
-      device_name = "/dev/sda1"
-      volume_size = 10
       volume_type = "gp3"
+      volume_size = 30
+      encrypted   = true
     },
-    #{
-    #  device_name = "/dev/sdh"
-    #  volume_size = 8
-    #  volume_type = "gp2"
-    #},
   ]
+
+  # Volumes EBS Adicionais especificações
+  #ebs_block_device = [
+  #  {
+  #    device_name = "/dev/sdg"
+  #    volume_size = 50
+  #    volume_type = "gp3"
+  #    encrypted   = true
+  #  },
+  #  {
+  #   device_name = "/dev/sdh"
+  #   volume_size = 50
+  #   volume_type = "gp2"
+  #   encrypted   = true
+  #  },
+  #]
 
   # Habilitar/criar SG customizado?
   enable_sg = true
