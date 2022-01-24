@@ -32,10 +32,3 @@ output "arn" {
     instance.arn => instance.arn
   }
 }
-
-output "public_key" {
-  value = {
-    for key in tls_private_key.this:
-    key.public_key => key.public_key
-  }
-}
