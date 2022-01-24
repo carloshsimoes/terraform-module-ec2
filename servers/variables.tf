@@ -67,6 +67,7 @@ variable "blocks_ebs_volumes" {
     volume_type = string
   }))
   description = "Lista com objetos Blocks para criação de volumes EBS adicionais"
+  default = null
 }
 
 variable "enable_sg" {
