@@ -35,21 +35,31 @@ resource "aws_instance" "web" {
   #associate_public_ip_address = true
   associate_public_ip_address = var.enable_eip
 
-  root_block_device {
-    volume_size = var.blocks_ebs_root_volume[0]
-    volume_type = var.blocks_ebs_root_volume[1]
-    encrypted   = true
-  }
-
-  dynamic "ebs_block_device" {
-    for_each = try (var.blocks_ebs_volumes)
+  dynamic "root_block_device" {
+    for_each = var.root_block_device
     content {
-      device_name = ebs_block_device.value["device_name"]
-      volume_size = ebs_block_device.value["volume_size"]
-      volume_type = ebs_block_device.value["volume_type"]
+      delete_on_termination = lookup(root_block_device.value, "delete_on_termination", null)
+      encrypted             = lookup(root_block_device.value, "encrypted", null)
+      iops                  = lookup(root_block_device.value, "iops", null)
+      kms_key_id            = lookup(root_block_device.value, "kms_key_id", null)
+      volume_size           = lookup(root_block_device.value, "volume_size", null)
+      volume_type           = lookup(root_block_device.value, "volume_type", null)
     }
   }
 
+  dynamic "ebs_block_device" {
+    for_each = var.ebs_block_device
+    content {
+      delete_on_termination = lookup(ebs_block_device.value, "delete_on_termination", null)
+      device_name           = ebs_block_device.value.device_name
+      encrypted             = lookup(ebs_block_device.value, "encrypted", null)
+      iops                  = lookup(ebs_block_device.value, "iops", null)
+      kms_key_id            = lookup(ebs_block_device.value, "kms_key_id", null)
+      snapshot_id           = lookup(ebs_block_device.value, "snapshot_id", null)
+      volume_size           = lookup(ebs_block_device.value, "volume_size", null)
+      volume_type           = lookup(ebs_block_device.value, "volume_type", null)
+    }
+  }
 
   tags = {
 
