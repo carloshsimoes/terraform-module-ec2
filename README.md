@@ -24,7 +24,8 @@ Criar em sua conta AWS também, um Security Group (SG) default, com os atributos
 * **iam_instance_profile (string)** -> Role IAM associada a Instancia (Obs; Deve existir/ser criada previamente com repo de IAM)
 * **vpc_id (string)** -> Qual a VPC os recursos serão criados? exemplo "vpc-03b0a419b5b2e9e2e".
 * **subnet_id (string)** -> Qual a Subnet os recursos serão criados? exemplo subnet-02c7ceb2a5feafd40".
-* **blocks (list object)** -> Definições de volume(s) EBS a serem criados. * Veja exemplo no "terrafile.tf" abaixo!
+* **root_block_device (list object)** -> Definições de volume ROOT a ser criado. * Veja exemplo no "terrafile.tf" abaixo!
+* **ebs_block_device (list object)** -> Definições de volumes EBS adicionais a serem criados. * Veja exemplo no "terrafile.tf" abaixo!
 * **enable_sg (bool)** -> Deseja criar um Security Group (SG) customizado? True | False
 * **enable_eip (bool)** -> Deseja criar e associar um Elastic IP (IP)? True | False
 * **ingress (list object))** - > Definições do SG a ser criado, caso tenha habilitado a flag "enable_sg"
@@ -147,8 +148,24 @@ module "servers" {
   ]
 }
 
-# output "ip_address" {
-#   value = module.servers.ip_address
-# }
+output "id" {
+  value = module.servers.id
+}
+
+output "arn" {
+  value = module.servers.arn
+}
+
+output "private_ip" {
+  value = module.servers.private_ip
+}
+
+output "public_dns" {
+  value = module.servers.public_dns
+}
+
+output "public_ip" {
+  value = module.servers.public_ip
+}
 ```
 
