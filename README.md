@@ -161,20 +161,28 @@ module "servers" {
   ]
 }
 
-output "arns" {
-  value = module.servers.arn
+output "instance_arns" {
+  value = module.servers.instance_arns
 }
 
-output "private_ips" {
-  value = module.servers.private_ip
+output "instance_private_ip" {
+  value = module.servers.instance_private_ip
 }
 
-output "public_dnsnames" {
-  value = module.servers.public_dns
+output "instance_public_ip" {
+  value = module.servers.instance_public_ip
 }
 
-output "public_ips" {
-  value = module.servers.public_ip
+output "instance_public_dns" {
+  value = module.servers.instance_public_dns
+}
+
+output "eip_public_ip" {
+  value = module.servers.eip_public_ip
+}
+
+output "eip_public_dns" {
+  value = module.servers.eip_public_dns
 }
 
 ```
