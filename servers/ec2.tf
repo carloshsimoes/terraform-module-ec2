@@ -1,3 +1,9 @@
+data "aws_vpc" "vpc_default" {
+  filter = "name"
+  value = ["vpc-default"]
+}
+
+
 data "aws_ami" "ubuntu" {
   most_recent = true
 
@@ -29,7 +35,9 @@ resource "aws_instance" "web" {
   key_name      = var.key_name
 
   vpc_security_group_ids = var.enable_sg ? aws_security_group.optional[*].id : [data.aws_security_group.default.id]
-  subnet_id     = var.subnet_id
+
+  #subnet_id     = var.subnet_id
+  subnet_id      = length(var.subnet_id) > 6 && substr(var.subnet_id, 0, 7) == "subnet-" ? var.subnet_id : null
 
   associate_public_ip_address = var.enable_eip
 

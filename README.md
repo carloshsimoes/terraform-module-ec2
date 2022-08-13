@@ -84,10 +84,14 @@ module "servers" {
   # Role IAM associada a Instancia (Obs; Deve existir/ser criada previamente com repo de IAM)
   #iam_instance_profile = "EC2-Role-Name"
 
-  # VPC onde o SG será criado
+  # VPC onde o SG será criado - Senão informar uma vai usar a "default"
+  # Deve atender requisito: length(var.vpc_id) > 3 && substr(var.vpc_id, 0, 4) == "vpc-"
+  # Caso contrario vai buscar/usar a vpc-default"
   vpc_id = "vpc-xxxxxxxxxxxxxxxxx"
 
   # Subnet aonde a instancia sera criada
+  # Deve atender requisito: length(var.subnet_id) > 6 && substr(var.subnet_id, 0, 7) == "subnet-"
+  # Caso contrário vai passar NULL
   subnet_id = "subnet-xxxxxxxxxxxxxxxxx"
 
   # Habilitar/Associar a Elastic IP - EIP?

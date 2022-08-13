@@ -93,10 +93,10 @@ variable "vpc_id" {
     default = ""
     description = "Qual a VPC?"
 
-    validation {
-    condition     = length(var.vpc_id) > 3 && substr(var.vpc_id, 0, 4) == "vpc-"
-    error_message = "O valor vpc_id deve ter no minimo 4 caracteres, exemplo \"vpc-\"."
-  }
+  #   validation {
+  #   condition     = length(var.vpc_id) > 3 && substr(var.vpc_id, 0, 4) == "vpc-"
+  #   error_message = "O valor vpc_id deve ter no minimo 4 caracteres, exemplo \"vpc-\"."
+  # }
 }
 
 variable "subnet_id" {
