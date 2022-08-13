@@ -1,24 +1,24 @@
 variable "servers" {
-  type = number
-  default = 1
+  type        = number
+  default     = 1
   description = "Quantidade instancias EC2 a lançar"
 }
 
 variable "so" {
-  type = string
-  default = "amazonlinux"
+  type        = string
+  default     = "amazonlinux"
   description = "Tipo de SO Linux, ubuntu ou amazonlinux"
 }
 
 variable "iam_instance_profile" {
-  type = string
-  default = ""
+  type        = string
+  default     = ""
   description = "ARN da Role que a instancia vai assumir"
 }
 
 variable "instance_type" {
-  type = string
-  default = "t2.micro"
+  type        = string
+  default     = "t2.micro"
   description = "Tipo de instancia e familia a ser lançada"
 
   validation {
@@ -43,15 +43,15 @@ variable "environment" {
 }
 
 variable "create_keypair" {
-  type    = bool
-  default = false
+  type        = bool
+  default     = false
   description = "Criar nova KeyPair para acesso a EC2"
 }
 
 variable "key_name" {
   type        = string
   description = "Nome da chave para conectar as EC2"
-  default = ""
+  default     = ""
 }
 
 variable "root_block_device" {
@@ -63,35 +63,35 @@ variable "root_block_device" {
 variable "ebs_block_device" {
   type        = list(map(string))
   description = "Lista com objetos Blocks para criação de volumes EBS adicionais"
-  default = []
+  default     = []
 }
 
 variable "enable_sg" {
-  type    = bool
-  default = false
+  type        = bool
+  default     = false
   description = "Habilitar funcionalidade de criação do SG"
 }
 
 variable "enable_eip" {
-  type    = bool
-  default = false
+  type        = bool
+  default     = false
   description = "Associar a um Elastic IP - Ip público fixo?"
 }
 
 variable "ingress" {
   type = list(object({
-    from_port = number
-    to_port = number
-    cidr_value = string
+    from_port      = number
+    to_port        = number
+    cidr_value     = string
     protocol_value = string
   }))
   description = "Lista com objetos, rules, para criação das regras de inbound do resource SG"
 }
 
 variable "vpc_id" {
-    type = string
-    default = ""
-    description = "Qual a VPC?"
+  type        = string
+  default     = ""
+  description = "Qual a VPC?"
 
   #   validation {
   #   condition     = length(var.vpc_id) > 3 && substr(var.vpc_id, 0, 4) == "vpc-"
@@ -100,17 +100,17 @@ variable "vpc_id" {
 }
 
 variable "subnet_id" {
-    type = string
-    default = ""
-    description = "Qual a Subnet no qual a instância será criada?"
+  type        = string
+  default     = ""
+  description = "Qual a Subnet no qual a instância será criada?"
 }
 
 variable "custom_tags" {
-  type    = map
+  type    = map(any)
   default = {}
 }
 
 variable "base_tags" {
-  type    = map
+  type    = map(any)
   default = {}
 }

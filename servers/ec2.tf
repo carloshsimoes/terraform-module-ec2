@@ -32,13 +32,13 @@ resource "aws_instance" "web" {
   iam_instance_profile = var.iam_instance_profile
 
   #KeyPair - PEM
-  key_name      = var.key_name
+  key_name = var.key_name
 
   #vpc_security_group_ids = var.enable_sg ? aws_security_group.optional[*].id : [data.aws_security_group.default.id]
   vpc_security_group_ids = var.enable_sg ? aws_security_group.optional[*].id : aws_security_group.default[*].id
 
   #subnet_id     = var.subnet_id
-  subnet_id      = length(var.subnet_id) > 6 && substr(var.subnet_id, 0, 7) == "subnet-" ? var.subnet_id : null
+  subnet_id = length(var.subnet_id) > 6 && substr(var.subnet_id, 0, 7) == "subnet-" ? var.subnet_id : null
 
   # Enable EIP or Dynamic IP
   associate_public_ip_address = var.enable_eip
@@ -77,9 +77,9 @@ resource "aws_instance" "web" {
 }
 
 resource "aws_eip" "servers" {
-  count = var.enable_eip ? var.servers : 0
-  instance = aws_instance.web[count.index].id
-  vpc      = true
+  count      = var.enable_eip ? var.servers : 0
+  instance   = aws_instance.web[count.index].id
+  vpc        = true
   depends_on = [aws_instance.web]
 
   tags = {

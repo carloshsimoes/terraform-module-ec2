@@ -5,9 +5,9 @@ resource "tls_private_key" "this" {
 module "key_pair" {
   source = "terraform-aws-modules/key-pair/aws"
 
-  create              = var.create_keypair
-  key_name           = var.key_name
-  public_key         = trimspace(tls_private_key.this.public_key_openssh)
+  create     = var.create_keypair
+  key_name   = var.key_name
+  public_key = trimspace(tls_private_key.this.public_key_openssh)
 
   tags = {
     Name = var.key_name
