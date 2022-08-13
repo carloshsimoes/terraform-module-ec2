@@ -2,7 +2,6 @@ data "aws_vpc" "vpc_default" {
   default = true
 }
 
-
 data "aws_ami" "ubuntu" {
   most_recent = true
 
@@ -29,15 +28,19 @@ resource "aws_instance" "web" {
   count         = var.servers
   ami           = var.so == "ubuntu" ? data.aws_ami.ubuntu.id : data.aws_ami.amazonlinux.id
   instance_type = var.instance_type
+
   iam_instance_profile = var.iam_instance_profile
 
+  #KeyPair - PEM
   key_name      = var.key_name
 
-  vpc_security_group_ids = var.enable_sg ? aws_security_group.optional[*].id : [data.aws_security_group.default.id]
+  #vpc_security_group_ids = var.enable_sg ? aws_security_group.optional[*].id : [data.aws_security_group.default.id]
+  vpc_security_group_ids = var.enable_sg ? aws_security_group.optional[*].id : aws_security_group.default[*].id
 
   #subnet_id     = var.subnet_id
   subnet_id      = length(var.subnet_id) > 6 && substr(var.subnet_id, 0, 7) == "subnet-" ? var.subnet_id : null
 
+  # Enable EIP or Dynamic IP
   associate_public_ip_address = var.enable_eip
 
   dynamic "root_block_device" {
@@ -78,4 +81,10 @@ resource "aws_eip" "servers" {
   instance = aws_instance.web[count.index].id
   vpc      = true
   depends_on = [aws_instance.web]
+
+  tags = {
+    Name = "eip-${var.name}"
+    Env  = var.environment
+  }
+
 }

@@ -8,6 +8,12 @@ module "key_pair" {
   create              = var.create_keypair
   key_name           = var.key_name
   public_key         = trimspace(tls_private_key.this.public_key_openssh)
+
+  tags = {
+    Name = var.key_name
+    Env  = var.environment
+  }
+
 }
 
 resource "local_file" "private_key" {

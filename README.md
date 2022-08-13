@@ -5,35 +5,42 @@ Exemplo de código criado para criação de instâncias EC2 no Provider AWS!
 **OBS:** Não esquecer de passar os parâmetros "AWS_ACCESS_KEY_ID" e "AWS_SECRET_ACCESS_KEY" de uma conta que possui permissões para performar/criar recursos no seu provider AWS, assim como consumir o S3 caso esteja utilizando state remoto!
 
 
-Criar em sua conta AWS também, um Security Group (SG) default, com os atributos abaixo:
+# Para consumir o modulo, você deverá passar os inputs:
 
-* Security Group Name: sgdefault
-* TAG: key="modelo" / value="sgdefault"
-* Inboud/Ingress (somente como base para padrão): tcp, 80, 0.0.0.0/0 
+> **`servers`** *(number)* ===> Quantidade de instâncias a criar (ex: 1);
+
+> **`so`** *(string)* ==> Distribuição SO, ("ubuntu" ou "amazonlinux"), no qual o modulo vai buscar a AMI oficial correspondente na sua última versão;
+
+> **`instance_type`** *(string)* ==> Tipo de instância a ser criada, exemplo "t3.micro";
+
+> **`name`** *(string)* ==> Nome da sua ou suas instâncias, exemplo: "srv-web-dev";
+
+> **`environment`** *(string)* ==> Qual o ambiente? Será criada uma TAG também com esse atributo, identificando o environment, exemplo: "Desenvolvimento";
+
+> **`create_keypair`** *(bool)* ==> Deseja criar a KeyPair (PrivateKey) para acesso a instância EC2 automaticamente? True | False;
+
+> **`key_name`** *(string)* ==> Private Key utilizada para conectar a instância EC2;
+
+> **`iam_instance_profile`** *(string)* ==> Role IAM associada a Instancia (Obs; Deve existir/ser criada previamente com repo de IAM);
+
+> **`vpc_id`** *(string)* ==> Qual a VPC os recursos serão criados? exemplo "vpc-03b0a419b5b2e9e2e". Senão informado vai buscar/usar a vpc-default";
+
+> **`subnet_id`** *(string)* ==> Qual a Subnet os recursos serão criados? exemplo subnet-02c7ceb2a5feafd40". Senão informado vai passar NULL;
+
+> **`root_block_device`** *(list object)* ==> Definições de volume ROOT a ser criado. * Veja exemplo no "terrafile.tf" abaixo;
+
+> **`ebs_block_device`** *(list object)* ==> Definições de volumes EBS adicionais a serem criados. * Veja exemplo no "terrafile.tf" abaixo;
+
+> **`enable_eip`** (bool)* ==> Deseja criar e associar um Elastic IP (IP)? True | False;
+
+> **`enable_sg`** (bool)* ==> Deseja criar um Security Group (SG) customizado? True | False; Se TRUE, definir as regras na variável *ingress*. Se FALSE vai criar um SG default somente com egress;
+
+> **`ingress`** (list object))* - > Definições do SG a ser criado, caso tenha habilitado a flag "enable_sg";
 
 
-## Para consumir o modulo, você deverá passar os inputs:
+# Veja exemplo no "terrafile.tf" abaixo:
 
-* **servers (number)** -> Quantidade de instâncias a criar (ex: 1)
-* **so (string)** -> Distribuição SO, ("ubuntu" ou "amazonlinux"), no qual o modulo vai buscar a AMI oficial correspondente na sua última versão!
-* **instance_type (string)** -> Tipo de instância a ser criada, exemplo "t2.micro".
-* **name (string)** -> Nome da sua ou suas instâncias, exemplo: "srv-web-dev"
-* **environment (string)** -> Qual o ambiente? Será criada uma TAG também com esse atributo, identificando o environment, exemplo: "Desenvolvimento"
-* **create_keypair (bool)** -> Deseja criar a KeyPair (PrivateKey) para acesso a instância EC2 automaticamente? True | False
-* **key_name (string)** -> Private Key utilizada para conectar a instância EC2
-* **iam_instance_profile (string)** -> Role IAM associada a Instancia (Obs; Deve existir/ser criada previamente com repo de IAM)
-* **vpc_id (string)** -> Qual a VPC os recursos serão criados? exemplo "vpc-03b0a419b5b2e9e2e".
-* **subnet_id (string)** -> Qual a Subnet os recursos serão criados? exemplo subnet-02c7ceb2a5feafd40".
-* **root_block_device (list object)** -> Definições de volume ROOT a ser criado. * Veja exemplo no "terrafile.tf" abaixo!
-* **ebs_block_device (list object)** -> Definições de volumes EBS adicionais a serem criados. * Veja exemplo no "terrafile.tf" abaixo!
-* **enable_sg (bool)** -> Deseja criar um Security Group (SG) customizado? True | False
-* **enable_eip (bool)** -> Deseja criar e associar um Elastic IP (IP)? True | False
-* **ingress (list object))** - > Definições do SG a ser criado, caso tenha habilitado a flag "enable_sg"
-
-
-## Veja exemplo no "terrafile.tf" abaixo:
-
-Para usar o modulo, criar no módulo raiz (root module) o arquivo **terrafile.tf**, conforme o exemplo abaixo:
+## Para usar o modulo, criar no módulo raiz (root module) o arquivo **terrafile.tf**, conforme o exemplo abaixo:
 
 
 ```terraform
@@ -74,15 +81,18 @@ module "servers" {
   # Nome da instância
   name = "nome-da-minha-instancia"
 
-  # Ambiente
+  # TAG de Ambiente a ser criada nos Recursos
   environment = "Producao"
 
-  # Criar uma nova KeyPair utilizada para conectar a ec2
+  # Criar uma nova KeyPair utilizada para conectar a instância.
   create_keypair = true
+
+  # Nome da KeyPair. Será criada se create_keypair = true, Senão defina o nome de uma KeyPair existente na conta!
   key_name       = "KP-EC2-NOME-CHAVE-PRIVADA"
 
   # Role IAM associada a Instancia (Obs; Deve existir/ser criada previamente com repo de IAM)
   #iam_instance_profile = "EC2-Role-Name"
+
 
   # VPC onde o SG será criado - Senão informar uma vai usar a "default"
   # Deve atender requisito: length(var.vpc_id) > 3 && substr(var.vpc_id, 0, 4) == "vpc-"
@@ -94,8 +104,9 @@ module "servers" {
   # Subnet aonde a instancia sera criada
   # Deve atender requisito: length(var.subnet_id) > 6 && substr(var.subnet_id, 0, 7) == "subnet-"
   # Caso contrário vai passar NULL
-
+  
   #subnet_id = "subnet-xxxxxxxxxxxxxxxxx"
+
 
   # Habilitar/Associar a Elastic IP - EIP?
   enable_eip = true
