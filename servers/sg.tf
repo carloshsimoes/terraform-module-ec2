@@ -13,16 +13,8 @@
 
 
 resource "aws_security_group" "default" {
-  count  = var.enable_sg ? 0 : 1
   name   = "sgdefault-${var.name}"
   vpc_id = length(var.vpc_id) > 3 && substr(var.vpc_id, 0, 4) == "vpc-" ? var.vpc_id : data.aws_vpc.vpc_default.id
-
-  # ingress {
-  #   from_port       = 80
-  #   to_port         = 80
-  #   protocol        = "tcp"
-  #   cidr_blocks     = ["0.0.0.0/0"]
-  # }
 
   egress {
     from_port   = 0
