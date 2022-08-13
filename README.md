@@ -43,10 +43,10 @@ Exemplo de código criado para criação de instâncias EC2 no Provider AWS!
 ## Para usar o modulo, criar no módulo raiz (root module) o arquivo **terrafile.tf**, conforme o exemplo abaixo:
 
 
-```terraform
+```
 
 provider "aws" {
-  region  = "us-east-1" #Virginia
+  region = "us-east-1" #Virginia
   #region  = "sa-east-1" #SaoPaulo
 }
 
@@ -73,7 +73,7 @@ module "servers" {
 
   # Qual o distribuicao, ubuntu ou amazonlinux
   so = "ubuntu"
-  #so            = "amazonlinux"
+  #so = "amazonlinux"
 
   # Qual a familia/tipo da instância
   instance_type = "t3.micro"
@@ -88,7 +88,7 @@ module "servers" {
   create_keypair = true
 
   # Nome da KeyPair. Será criada se create_keypair = true, Senão defina o nome de uma KeyPair existente na conta!
-  key_name       = "KP-EC2-NOME-CHAVE-PRIVADA"
+  key_name = "KP-EC2-NOME-CHAVE-PRIVADA"
 
   # Role IAM associada a Instancia (Obs; Deve existir/ser criada previamente com repo de IAM)
   #iam_instance_profile = "EC2-Role-Name"
@@ -104,7 +104,7 @@ module "servers" {
   # Subnet aonde a instancia sera criada
   # Deve atender requisito: length(var.subnet_id) > 6 && substr(var.subnet_id, 0, 7) == "subnet-"
   # Caso contrário vai passar NULL
-  
+
   #subnet_id = "subnet-xxxxxxxxxxxxxxxxx"
 
 
@@ -145,33 +145,33 @@ module "servers" {
   # especificações do SG customizado, somente será criado se definido enable_sg = true
   ingress = [
     {
-      from_port     = 80
-      to_port       = 80
+      from_port      = 80
+      to_port        = 80
       cidr_value     = "0.0.0.0/0"
       protocol_value = "tcp"
     },
     {
-      from_port     = 443
-      to_port       = 443
+      from_port      = 443
+      to_port        = 443
       cidr_value     = "0.0.0.0/0"
       protocol_value = "tcp"
     },
     {
-      from_port     = 22
-      to_port       = 22
+      from_port      = 22
+      to_port        = 22
       cidr_value     = "0.0.0.0/0"
       protocol_value = "tcp"
     },
     {
-      from_port     = 8
-      to_port       = 0
+      from_port      = 8
+      to_port        = 0
       cidr_value     = "0.0.0.0/0"
       protocol_value = "icmp"
     },
     /*
     {
-      from_port     = 0
-      to_port       = 0
+      from_port      = 0
+      to_port        = 0
       cidr_value     = "10.16.0.0/16"
       protocol_value = -1
     },
@@ -202,6 +202,7 @@ output "eip_public_ip" {
 output "eip_public_dns" {
   value = module.servers.eip_public_dns
 }
+
 
 ```
 
