@@ -213,6 +213,15 @@ Já dentro do nosso container, estaremos na pasta "/app" que é nosso "workdir",
 
 Logo, uma vez criado nosso arquivo de definição `terrafile.tf` como no exemplo acima na DOC, basta executar nosso PLAN e APPLY:
 
+> Executando nosso init
+
+```bash
+
+terraform init
+
+```
+
+> Criando nosso Plano
 
 ```bash
 
@@ -221,18 +230,16 @@ terraform plan -out plano
 ```
 
 
-Valide seus recursos se estão conforme definido. Estando tudo ok, basta aplicar o estado:
+> Valide seus recursos se estão conforme definido. Estando tudo ok, basta aplicar o estado:
 
 ```bash
-
-terraform init
 
 terraform apply "plano"
 
 ```
 
 
-E claro, não menos importante, para destruir tudo:
+> E claro, não menos importante, para destruir tudo:
 
 ```bash
 
