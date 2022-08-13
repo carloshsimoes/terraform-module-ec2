@@ -19,13 +19,6 @@ output "public_ip" {
   }
 }
 
-# output "id" {
-#   value = {
-#     for instance in aws_instance.web:
-#     instance.id => instance.id
-#   }
-# }
-
 output "arn" {
   value = {
     for instance in aws_instance.web:

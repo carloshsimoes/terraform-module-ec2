@@ -161,10 +161,6 @@ module "servers" {
   ]
 }
 
-output "ids" {
-  value = module.servers.id
-}
-
 output "arns" {
   value = module.servers.arn
 }
@@ -180,5 +176,6 @@ output "public_dnsnames" {
 output "public_ips" {
   value = module.servers.public_ip
 }
+
 ```
 
