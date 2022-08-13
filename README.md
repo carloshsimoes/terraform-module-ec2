@@ -37,10 +37,20 @@ Para usar o modulo, criar no módulo raiz (root module) o arquivo **terrafile.tf
 
 
 ```terraform
+
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.0"
+    }
+  }
+}
+
+
 provider "aws" {
   #region  = "us-east-1" #Virginia
   region  = "sa-east-1" #SaoPaulo
-  version = "~> 3.0"
 }
 
 # Caso use/queira usar state remoto em um bucket S3
@@ -69,7 +79,7 @@ module "servers" {
   #so            = "amazonlinux"
 
   # Qual a familia/tipo da instância
-  instance_type = "t2.micro"
+  instance_type = "t3.micro"
 
   # Nome da instância
   name = "nome-da-minha-instancia"
@@ -119,6 +129,7 @@ module "servers" {
   #  },
   #]
 
+
   # Habilitar/criar SG customizado?
   enable_sg = true
   #enable_sg = false
@@ -126,46 +137,62 @@ module "servers" {
   # especificações do SG customizado, somente será criado se definido enable_sg = true
   ingress = [
     {
-      port_value     = 80
+      from_port     = 80
+      to_port       = 80
       cidr_value     = "0.0.0.0/0"
       protocol_value = "tcp"
     },
     {
-      port_value     = 443
+      from_port     = 443
+      to_port       = 443
       cidr_value     = "0.0.0.0/0"
       protocol_value = "tcp"
     },
     {
-      port_value     = 22
+      from_port     = 22
+      to_port       = 22
       cidr_value     = "0.0.0.0/0"
       protocol_value = "tcp"
     },
-    /*{
-      port_value     = 0
+    {
+      from_port     = 8
+      to_port       = 0
+      cidr_value     = "0.0.0.0/0"
+      protocol_value = "icmp"
+    },
+    /*
+    {
+      from_port     = 0
+      to_port       = 0
       cidr_value     = "10.16.0.0/16"
       protocol_value = -1
-    },*/
+    },
+    */
   ]
 }
 
-output "id" {
+output "ids" {
   value = module.servers.id
 }
 
-output "arn" {
+output "arns" {
   value = module.servers.arn
 }
 
-output "private_ip" {
+output "private_ips" {
   value = module.servers.private_ip
 }
 
-output "public_dns" {
+output "public_dnsnames" {
   value = module.servers.public_dns
 }
 
-output "public_ip" {
+output "public_ips" {
   value = module.servers.public_ip
+}
+
+output "public_key" {
+  value = module.servers.public_key
 }
 ```
 

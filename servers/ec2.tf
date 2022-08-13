@@ -3,7 +3,7 @@ data "aws_ami" "ubuntu" {
 
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
   }
 
   owners = ["099720109477"] # Ubuntu
@@ -27,12 +27,10 @@ resource "aws_instance" "web" {
   iam_instance_profile = var.iam_instance_profile
 
   key_name      = var.key_name
-  # public_key    = var.create_keypair ? tls_private_key.this.public_key_openssh : ""
 
   vpc_security_group_ids = var.enable_sg ? aws_security_group.optional[*].id : [data.aws_security_group.default.id]
   subnet_id     = var.subnet_id
 
-  #associate_public_ip_address = true
   associate_public_ip_address = var.enable_eip
 
   dynamic "root_block_device" {
@@ -62,7 +60,6 @@ resource "aws_instance" "web" {
   }
 
   tags = {
-
     Name = var.name
     Env  = var.environment
   }

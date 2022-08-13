@@ -80,7 +80,8 @@ variable "enable_eip" {
 
 variable "ingress" {
   type = list(object({
-    port_value = number
+    from_port = number
+    to_port = number
     cidr_value = string
     protocol_value = string
   }))

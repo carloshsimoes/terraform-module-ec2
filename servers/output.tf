@@ -32,3 +32,8 @@ output "arn" {
     instance.arn => instance.arn
   }
 }
+
+
+output "public_key" {
+  value = key_pair.public_key
+}

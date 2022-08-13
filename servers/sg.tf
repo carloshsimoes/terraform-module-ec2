@@ -18,19 +18,12 @@ resource "aws_security_group" "optional" {
   dynamic "ingress" {
     for_each = var.ingress
     content {
-      from_port   = ingress.value["port_value"]
-      to_port     = ingress.value["port_value"]
+      from_port   = ingress.value["from_port"]
+      to_port     = ingress.value["to_port"]
       protocol    = ingress.value["protocol_value"]
       cidr_blocks = [ingress.value["cidr_value"]]
     }
   }
-
-  /*ingress { # Default ICMP
-    from_port       = 8
-    to_port         = 0
-    protocol        = "icmp"
-    cidr_blocks     = ["0.0.0.0/0"]
-  }*/
 
   egress {
     from_port       = 0
