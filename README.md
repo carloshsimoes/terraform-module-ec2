@@ -225,6 +225,8 @@ Valide seus recursos se estão conforme definido. Estando tudo ok, basta aplicar
 
 ```bash
 
+terraform init
+
 terraform apply "plano"
 
 ```
