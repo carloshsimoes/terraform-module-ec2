@@ -87,12 +87,15 @@ module "servers" {
   # VPC onde o SG será criado - Senão informar uma vai usar a "default"
   # Deve atender requisito: length(var.vpc_id) > 3 && substr(var.vpc_id, 0, 4) == "vpc-"
   # Caso contrario vai buscar/usar a vpc-default"
-  vpc_id = "vpc-xxxxxxxxxxxxxxxxx"
+
+  #vpc_id = "vpc-xxxxxxxxxxxxxxxxx"
+
 
   # Subnet aonde a instancia sera criada
   # Deve atender requisito: length(var.subnet_id) > 6 && substr(var.subnet_id, 0, 7) == "subnet-"
   # Caso contrário vai passar NULL
-  subnet_id = "subnet-xxxxxxxxxxxxxxxxx"
+
+  #subnet_id = "subnet-xxxxxxxxxxxxxxxxx"
 
   # Habilitar/Associar a Elastic IP - EIP?
   enable_eip = true
@@ -190,4 +193,49 @@ output "eip_public_dns" {
 }
 
 ```
+
+
+# Utilizando o Docker para executar seu IaC
+
+## Criando o container mapeando seu contexto/pasta atual para o container:
+
+OBS; Como iremos criar nossos recursos na CLOUD AWS, você pode exportar/env previamente "AWS_ACCESS_KEY_ID" e "AWS_SECRET_ACCESS_KEY", em seguida repassando o mesmo na criação do Container.
+
+```bash
+
+docker container run -ti --env "AWS_ACCESS_KEY_ID" --env "AWS_SECRET_ACCESS_KEY" -v "$PWD:/app" -w /app --entrypoint "" hashicorp/terraform:light sh
+
+```
+
+# Executando seu PLAN e APPLY para criar seus recursos:
+
+Já dentro do nosso container, estaremos na pasta "/app" que é nosso "workdir", na qual montando (BIND).
+
+Logo, uma vez criado nosso arquivo de definição `terrafile.tf` como no exemplo acima na DOC, basta executar nosso PLAN e APPLY:
+
+
+```bash
+
+terraform plan -out plano
+
+```
+
+
+Valide seus recursos se estão conforme definido. Estando tudo ok, basta aplicar o estado:
+
+```bash
+
+terraform apply "plano"
+
+```
+
+
+E claro, não menos importante, para destruir tudo:
+
+```bash
+
+terraform destroy
+
+```
+
 
