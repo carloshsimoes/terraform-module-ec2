@@ -29,13 +29,13 @@ output "instance_public_dns" {
 output "eip_public_ip" {
   value = {
     for eip in aws_eip.servers:
-    eip.association_id => eip.public_ip
+    eip.instance => eip.public_ip
   }
 }
 
 output "eip_public_dns" {
   value = {
     for eip in aws_eip.servers:
-    eip.association_id => eip.public_dns
+    eip.instance => eip.public_dns
   }
 }
