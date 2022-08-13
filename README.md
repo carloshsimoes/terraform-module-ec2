@@ -38,16 +38,6 @@ Para usar o modulo, criar no módulo raiz (root module) o arquivo **terrafile.tf
 
 ```terraform
 
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 3.0"
-    }
-  }
-}
-
-
 provider "aws" {
   #region  = "us-east-1" #Virginia
   region  = "sa-east-1" #SaoPaulo
