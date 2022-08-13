@@ -1,6 +1,8 @@
 data "aws_vpc" "vpc_default" {
-  filter = "name"
-  value = ["vpc-default"]
+  filter = {
+    name   = "name"
+    value = ["vpc-default"]
+  }
 }
 
 
