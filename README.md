@@ -39,8 +39,8 @@ Para usar o modulo, criar no módulo raiz (root module) o arquivo **terrafile.tf
 ```terraform
 
 provider "aws" {
-  #region  = "us-east-1" #Virginia
-  region  = "sa-east-1" #SaoPaulo
+  region  = "us-east-1" #Virginia
+  #region  = "sa-east-1" #SaoPaulo
 }
 
 # Caso use/queira usar state remoto em um bucket S3
@@ -82,7 +82,7 @@ module "servers" {
   key_name       = "KP-EC2-NOME-CHAVE-PRIVADA"
 
   # Role IAM associada a Instancia (Obs; Deve existir/ser criada previamente com repo de IAM)
-  iam_instance_profile = "EC2-Role-Name"
+  #iam_instance_profile = "EC2-Role-Name"
 
   # VPC onde o SG será criado
   vpc_id = "vpc-xxxxxxxxxxxxxxxxx"
@@ -98,7 +98,7 @@ module "servers" {
   root_block_device = [
     {
       volume_type = "gp3"
-      volume_size = 30
+      volume_size = 10
       encrypted   = true
     },
   ]
@@ -179,10 +179,6 @@ output "public_dnsnames" {
 
 output "public_ips" {
   value = module.servers.public_ip
-}
-
-output "public_key" {
-  value = module.servers.public_key
 }
 ```
 

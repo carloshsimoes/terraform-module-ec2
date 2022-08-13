@@ -3,10 +3,15 @@ resource "tls_private_key" "this" {
 }
 
 module "key_pair" {
-  count  = var.create_keypair ? 1 : 0
   source = "terraform-aws-modules/key-pair/aws"
 
-  #create_key_pair    = var.create_keypair
+  create              = var.create_keypair
   key_name           = var.key_name
-  public_key         = tls_private_key.this.public_key_openssh
+  public_key         = trimspace(tls_private_key.this.public_key_openssh)
+}
+
+resource "local_file" "private_key" {
+  content         = tls_private_key.this.private_key_pem
+  filename        = "${var.key_name}.pem"
+  file_permission = "0600"
 }
