@@ -183,24 +183,12 @@ output "instance_arns" {
   value = module.servers.instance_arns
 }
 
-output "instance_private_ip" {
-  value = module.servers.instance_private_ip
+output "instances_public_address" {
+  value = module.servers.instances_public_address
 }
 
-output "instance_public_ip" {
-  value = module.servers.instance_public_ip
-}
-
-output "instance_public_dns" {
-  value = module.servers.instance_public_dns
-}
-
-output "eip_public_ip" {
-  value = module.servers.eip_public_ip
-}
-
-output "eip_public_dns" {
-  value = module.servers.eip_public_dns
+output "eip_public_address" {
+  value = module.servers.eip_public_address
 }
 
 

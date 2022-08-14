@@ -5,37 +5,18 @@ output "instance_arns" {
   }
 }
 
-output "instance_private_ip" {
+output "instances_public_address" {
   value = {
-    for instance in aws_instance.web :
-    instance.id => instance.private_ip
+    for instance in aws_instance.web:
+    instance.id => ["Public IP: ${instance.public_ip}, Public DNS: ${instance.public_dns}"]
   }
+  
 }
 
-output "instance_public_ip" {
+output "eip_public_address" {
   value = {
-    for instance in aws_instance.web :
-    instance.id => instance.public_ip
+    for instance in aws_instance.web:
+    eip.instance => ["Public IP: ${eip.public_ip}, Public DNS: ${eip.public_dns}"]
   }
-}
-
-output "instance_public_dns" {
-  value = {
-    for instance in aws_instance.web :
-    instance.id => instance.public_dns
-  }
-}
-
-output "eip_public_ip" {
-  value = {
-    for eip in aws_eip.servers :
-    eip.instance => eip.public_ip
-  }
-}
-
-output "eip_public_dns" {
-  value = {
-    for eip in aws_eip.servers :
-    eip.instance => eip.public_dns
-  }
+  
 }
