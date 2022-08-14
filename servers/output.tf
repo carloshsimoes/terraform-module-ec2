@@ -15,7 +15,7 @@ output "instances_public_address" {
 
 output "eip_public_address" {
   value = {
-    for instance in aws_instance.web:
+    for eip in aws_eip.servers:
     eip.instance => ["Public IP: ${eip.public_ip}, Public DNS: ${eip.public_dns}"]
   }
   
